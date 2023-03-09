@@ -5,9 +5,9 @@ class poseDetector():
 
     def __init__(self, mode= True, model_complex=2, smooth_landmarks=True, detectionCon=0.5, trackCon=0.5):
 
-        self.mode = mode                                    
+        self.mode = mode                                     #static_image_mode         Set as True if working with single image
         self.model_complex = model_complex
-        self.smooth_landmarks = smooth_landmarks              
+        self.smooth_landmarks = smooth_landmarks              #By default set to True in mpPose.Pose
         self.detectionCon = detectionCon
         self.trackCon = trackCon
 
@@ -18,14 +18,14 @@ class poseDetector():
         self.pose = self.mpPose.Pose(static_image_mode=self.mode, model_complexity=self.model_complex, min_detection_confidence=self.detectionCon, min_tracking_confidence=self.trackCon)
 
     def drawLandmarks(self, img, draw=True):
-        img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)                      
+        img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)                       #Converting BGR to RGB as the mediapipe model expects RGB
         self.results = self.pose.process(img_RGB)
         # print(type(self.results.pose_landmarks))
         if self.results.pose_landmarks:
             if draw:
-                self.mpDraw.draw_landmarks(img, self.results.pose_landmarks, self.mpPose.POSE_CONNECTIONS,                    
-                                           self.mpDraw.DrawingSpec(color=(0,0,255), thickness=2, circle_radius=2),            
-                                           self.mpDraw.DrawingSpec(color=(0,255,0), thickness=2, circle_radius=2)             
+                self.mpDraw.draw_landmarks(img, self.results.pose_landmarks, self.mpPose.POSE_CONNECTIONS,                    #Drawing out the whole skeleton structure
+                                           self.mpDraw.DrawingSpec(color=(0,0,255), thickness=2, circle_radius=2),            #Color for landmarks
+                                           self.mpDraw.DrawingSpec(color=(0,255,0), thickness=2, circle_radius=2)             #Color for the connection between landmarks
                                            )
 
         return img
@@ -41,7 +41,7 @@ def main():
     output_image = detector.drawLandmarks(sample_img)
 
     print("Output Image is as follows:- ")
-    cv2.imshow(output_image)                                  
+    cv2.imshow(output_image)                                  #cv2.imshow would give error in google colab so switch to using cv2_imshow by google.colab.patches if using colab
     cv2.imwrite(r'output_result.png', output_image)
 
 
